@@ -555,10 +555,10 @@ void rotateCamera()
 
 	//Rotate the scene according to our current orientation
 	//The last three parameters of glRotate are multipliers for how much the rotation will effect each axis
-        glRotatef(rotY, 1, 0, 0);
-        glRotatef(rotX, 0, 1, 0);
-        
-        //Correct up axis for roll/gimbal lock by resetting Z rotation to 0;
+	glRotatef(rotY, 1, 0, 0);
+	glRotatef(rotX, 0, 1, 0);
+
+	//Correct up axis for roll/gimbal lock by resetting Z rotation to 0;
 	glRotatef(0, 0, 0, 1);
 }
 
@@ -846,9 +846,9 @@ GameObject loadObj(string objFile, SDL_Colour foo, float posX, float posY, float
 	string fileName = "resources" + pathSeparator + "models" + pathSeparator + objFile;
 	FILE * currentFile = fopen(fileName.c_str(), "r");
 
-    // vectors for the vertices and their normals
-    vector<GLfloat> normalVertices;
-    vector<GLfloat> vertices;
+	// vectors for the vertices and their normals
+	vector<GLfloat> normalVertices;
+	vector<GLfloat> vertices;
 
 	//If the file exists and can be opened
 	if(currentFile != NULL)
@@ -910,7 +910,7 @@ GameObject loadObj(string objFile, SDL_Colour foo, float posX, float posY, float
 						newObject.faceList.push_back(newObject.vertexList.size()+2);
 						newObject.faceList.push_back(newObject.vertexList.size()+1);
 						newObject.faceList.push_back(newObject.vertexList.size()+0);
-                        
+                     
 						//These indices aren't 0 based, so let's
 						//subtract one to get the right index into
 						//vertices[] and normalVertices[] and push the
@@ -926,18 +926,19 @@ GameObject loadObj(string objFile, SDL_Colour foo, float posX, float posY, float
 				//Else something has gone wrong. We'll output some information and try to make do with what we have
 				else
 				{
-					for(unsigned i = 0; i < 3; i++) {
+					for(unsigned i = 0; i < 3; i++)
+					{
 						newObject.faceList.push_back(newObject.vertexList.size()+2);
-                        newObject.faceList.push_back(newObject.vertexList.size()+1);
-                        newObject.faceList.push_back(newObject.vertexList.size()+0);
+						newObject.faceList.push_back(newObject.vertexList.size()+1);
+						newObject.faceList.push_back(newObject.vertexList.size()+0);
                         
-                        newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 0]);
-                        newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 1]);
-                        newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 2]);
-                        newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 0]);
-                        newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 1]);
-                        newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 2]);
-                    }
+						newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 0]);
+						newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 1]);
+						newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 2]);
+						newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 0]);
+						newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 1]);
+						newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 2]);
+					}
 					printf("Our obj parser is bad and we should feel bad. We couldn't parse the face defs >_<");
 					printf("%d  x: %+d  y: %+d  z: %+d\n", pcount, faceDefs[0], faceDefs[1], faceDefs[2]);
 					break;
