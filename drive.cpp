@@ -72,7 +72,7 @@ float carDirection = 180;
 float carX = 0;
 float carY = 0;
 
-//Audio  variables
+//Audio variables
 int mixChannelFans = -1;
 int mixChannelHover = -1;
 Mix_Chunk* sampleHover;
@@ -555,10 +555,10 @@ void rotateCamera()
 
 	//Rotate the scene according to our current orientation
 	//The last three parameters of glRotate are multipliers for how much the rotation will effect each axis
-        glRotatef(rotY, 1, 0, 0);
-        glRotatef(rotX, 0, 1, 0);
-        
-        //Correct up axis for roll/gimbal lock by resetting Z rotation to 0;
+	glRotatef(rotY, 1, 0, 0);
+	glRotatef(rotX, 0, 1, 0);
+
+	//Correct up axis for roll/gimbal lock by resetting Z rotation to 0;
 	glRotatef(0, 0, 0, 1);
 }
 
@@ -662,17 +662,14 @@ void renderObject(GameObject o)
 	glVertexPointer(3, GL_FLOAT, sizeof(GLfloat) * 3, o.vertexList.data());
 	glNormalPointer   (GL_FLOAT, sizeof(GLfloat) * 3, o.normalList.data());
 
-	//Ask OpenGL to draw polygons based on the indices contained in
-	//the faces array, which correspond to the vertexes from the
-	//normal array
+	//Ask OpenGL to draw polygons based on the indices contained in the faces array, which correspond to the vertexes from the normal array
 	glDrawElements(GL_TRIANGLES, o.faceList.size()/3, GL_UNSIGNED_SHORT, o.faceList.data());
 
-	//Disable the use of vertex and normal arrays (since we might not
-	//need this for other rendering)
+	//Disable the use of vertex and normal arrays (since we might not need this for other rendering)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 
-	//Pop the last stored matrix off the top of the stack so that we go back to the state we were in at the start of the loop		
+	//Pop the last stored matrix off the top of the stack so that we go back to the state we were in at the start of the loop
 	glPopMatrix();
 }
 
@@ -846,9 +843,9 @@ GameObject loadObj(string objFile, SDL_Colour foo, float posX, float posY, float
 	string fileName = "resources" + pathSeparator + "models" + pathSeparator + objFile;
 	FILE * currentFile = fopen(fileName.c_str(), "r");
 
-    // vectors for the vertices and their normals
-    vector<GLfloat> normalVertices;
-    vector<GLfloat> vertices;
+	//Temporary vectors to contain the vertices and their normals
+	vector<GLfloat> normalVertices;
+	vector<GLfloat> vertices;
 
 	//If the file exists and can be opened
 	if(currentFile != NULL)
@@ -861,7 +858,7 @@ GameObject loadObj(string objFile, SDL_Colour foo, float posX, float posY, float
 			//A character array that we'll store the first part of the line that we're reading in
 			char lineType[256];
 
-			//TODO: Longer term, it'd probably be worth just reading the entire line here and then do our conditionals based on  the first two characters, instead of just reading the first word.
+			//TODO: Longer term, it'd probably be worth just reading the entire line here and then do our conditionals based on the first two characters, instead of just reading the first word.
 			//Grab everything on the line before the first space (in the Wavefront OBJ format, the first few characters indicate the type of data stored on that line)
 			int result = fscanf(currentFile, "%s ", lineType);
 
@@ -883,10 +880,10 @@ GameObject loadObj(string objFile, SDL_Colour foo, float posX, float posY, float
 				vertices.push_back(y);
 				vertices.push_back(z);
 			}
-			// If the line represents a normal vertex
+			//If the line represents a normal vertex
 			else if (strcmp(lineType, "vn") == 0)
 			{
-				// Read the values and store them in our temporary list of normal vertices
+				//Read the values and store them in our temporary list of normal vertices
 				fscanf(currentFile, "%f %f %f\n", &x, &y, &z);
 				normalVertices.push_back(x);
 				normalVertices.push_back(y);
@@ -905,16 +902,14 @@ GameObject loadObj(string objFile, SDL_Colour foo, float posX, float posY, float
 				//If we've gotten the right number of pattern matches when reading from the file
 				if (pcount == 6)
 				{
-					for(unsigned i = 0; i < 3; i++) {
-						// push the next indices into the list of faces
+					for(unsigned i = 0; i < 3; i++)
+					{
+						//Push the next indices into the list of faces
 						newObject.faceList.push_back(newObject.vertexList.size()+2);
 						newObject.faceList.push_back(newObject.vertexList.size()+1);
 						newObject.faceList.push_back(newObject.vertexList.size()+0);
-                        
-						//These indices aren't 0 based, so let's
-						//subtract one to get the right index into
-						//vertices[] and normalVertices[] and push the
-						//vertices into their respective lists
+
+						//These indices aren't 0 based, so let's subtract one to get the right index into vertices[] and normalVertices[] and push the vertices into their respective lists
 						newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 0]);
 						newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 1]);
 						newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 2]);
@@ -926,18 +921,19 @@ GameObject loadObj(string objFile, SDL_Colour foo, float posX, float posY, float
 				//Else something has gone wrong. We'll output some information and try to make do with what we have
 				else
 				{
-					for(unsigned i = 0; i < 3; i++) {
+					for(unsigned i = 0; i < 3; i++)
+					{
 						newObject.faceList.push_back(newObject.vertexList.size()+2);
-                        newObject.faceList.push_back(newObject.vertexList.size()+1);
-                        newObject.faceList.push_back(newObject.vertexList.size()+0);
-                        
-                        newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 0]);
-                        newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 1]);
-                        newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 2]);
-                        newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 0]);
-                        newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 1]);
-                        newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 2]);
-                    }
+						newObject.faceList.push_back(newObject.vertexList.size()+1);
+						newObject.faceList.push_back(newObject.vertexList.size()+0);
+
+						newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 0]);
+						newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 1]);
+						newObject.vertexList.push_back(vertices[(faceDefs[i]-1) * 3 + 2]);
+						newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 0]);
+						newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 1]);
+						newObject.normalList.push_back(normalVertices[(normalDefs[i]-1) * 3 + 2]);
+					}
 					printf("Our obj parser is bad and we should feel bad. We couldn't parse the face defs >_<");
 					printf("%d  x: %+d  y: %+d  z: %+d\n", pcount, faceDefs[0], faceDefs[1], faceDefs[2]);
 					break;
